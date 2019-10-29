@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  get '/team', to: 'static#index'
-  get '/contact', to: 'kontact#contact'
+get '/', to: 'static#index'
+get "/contact", to: 'static#index_contact'
+get "/team", to: 'static#index_team'
+get "/:id", to: 'dynamic#index'
+get "/welcome/:name", to: 'dynamic#index_welcome'
 end

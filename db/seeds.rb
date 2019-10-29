@@ -1,44 +1,109 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
 require 'faker'
 
-# Create 10 cities with Faker gem 
-10.times do
-	City.create(name: Faker::Address.city, zip_code: Faker::Address.zip_code)
+users = []
+cities = []
+gossips = []
+tags = []
+messages = []
+likes = []
+comments = []
+commentssecond = []
+
+10.times do |x|
+  city = City.create(
+    name: Faker::Address.city,
+    zip_code: Faker::Address.zip_code)
+  cities << city
+  puts "Seeding vity nb#{x}"
 end
 
-# Create 10 fake users with Faker gem with instances of cities
-10.times do |index|
-	User.create(first_name: Faker::Name.first_name, last_name: Faker::Name.last_name, description: Faker::GreekPhilosophers.quote, email: Faker::Internet.email, age: rand(17..50), city: City.find(index + 1))
+
+10.times do |x|
+  user = User.create(
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    description: Faker::Lorem.paragraph,
+    email: Faker::Internet.email,
+    age: rand(16..80),
+    city_id: cities[rand(0..10-1)].id)
+  users << user
+  puts "Seeding user nb#{x}"
 end
 
-# Create 20 gossips linked to users
-20.times do
-	Gossip.create(title: Faker::Book.title, content: Faker::Quote.matz, author: User.find(rand(1..10)))
+20.times do |x|
+  gossip = Gossip.create(
+      title: Faker::Book.title,
+      content: Faker::Lorem.paragraph,
+      user_id: users[rand(0..10-1)].id)
+  gossips << gossip
 end
 
-# Create 10 tags
-10.times do
-	Tag.create(title: "##{Faker::Verb.past}")
+10.times do |x|
+  tag = Tag.create(
+    title: Faker::Book.genre)
+  tags << tag
 end
 
-# Create relationship between tag and gossip
-20.times do |index|
-	JoinTableTagGossip.create(gossip: Gossip.find(index +1), tag: Tag.find(rand(1..10)))
+20.times do |x|
+  GossipTag.create(
+      gossip_id: gossips[x],
+      tag_id: tags[rand(0..10-1)].id)
 end
 
-# Create 10 private messages
-10.times do 
-	PrivateMessage.create(content: Faker::GreekPhilosophers.quote, sender: User.find(rand(1..10)))
+10.times do |x|
+  GossipTag.create(
+      gossip_id: gossips[rand(0..20-1)],
+      tag_id: tags[rand(0..10-1)].id)
 end
 
-# Create recipients for private messages
-20.times do |index|
-	JoinTablePrivateMessageUser.create(received_message: PrivateMessage.find((index%10) + 1), user: User.find(rand(1..10)))
+
+20.times do |x|
+  message = PrivateMessage.create(
+    sender_id: users[rand(0..10-1)].id,
+    content: Faker::Lorem.paragraph)
+  messages << message
 end
 
+20.times do |x|
+  message = RecipientList.create(
+    private_message_id: messages[x].id,
+    recipient_id: users[rand(0..10-1)].id)
+  messages << message
+end
+
+20.times do |x|
+  message = RecipientList.create(
+    private_message_id: messages[rand(0..20-1)].id,
+    recipient_id: users[rand(0..10-1)].id)
+  messages << message
+
+end
+
+50.times do |x|
+  comment = Comment.create(
+      content: Faker::Lorem.paragraph,
+      user_id: users[rand(0..10-1)].id,
+      gossip_id: gossips[rand(0..20-1)].id)
+  comments << comment
+end
+
+
+20.times do |x|
+  like = Like.create(
+    comment_id: comments[rand(0..50-1)].id)
+  likes << like
+end
+
+20.times do |x|
+  like = Like.create(
+    gossip_id: gossips[rand(0..20-1)].id)
+  likes << like
+end
+
+50.times do |x|
+  comment = Comment.create(
+      content: Faker::Lorem.paragraph,
+      user_id: users[rand(0..10-1)].id,
+      comment_id: comments[rand(0..50-1)].id)
+  commentssecond << comment
+end

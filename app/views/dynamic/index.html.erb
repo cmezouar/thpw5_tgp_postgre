@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>The Gossip Project</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">The Gossip Project</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-item nav-link" href="/contact">Contact</a>
+          <a class="nav-item nav-link" href="/team">Team</a>
+          <a class="nav-item nav-link disabled" href="#"></a>
+        </div>
+      </div>
+    </nav>
+    <div class="mt-3">
+    </div>
+    <%i=0%>
+<%
+if Gossip.all.size - params[:id].to_i*11 < 11
+most = Gossip.all.size - params[:id].to_i*11
+else
+most = 11
+end
+%>
+    <%most.times do |nb|%>
+    <%if i==1%>
+     <div class="row justify-content-center p-0 m-0">
+        <div class="col-6 p-3 mb-3 d-flex justify-content-between bg-light text-dark center-block border">
+          <%=Gossip.all[nb + params[:id].to_i*11].title%>
+          <p class="m-0"><%=Gossip.all[nb+ params[:id].to_i*11].user.first_name%> <%=Gossip.all[nb+ params[:id].to_i*11].user.last_name%>  <a href="/gossips/<%=nb+ params[:id].to_i*11%>"> Voir plus</a></p>
+        </div>
+      </div>
+    <%i=0%>
+    <%else%>
+<div class="row justify-content-center p-0 m-0">
+    <div class="col-6 p-3 mb-3 bg-dark text-white d-flex justify-content-between">
+      <%=Gossip.all[nb + params[:id].to_i*11].title%>
+      <p class="m-0"><%=Gossip.all[nb+ params[:id].to_i*11].user.first_name%> <%=Gossip.all[nb+ params[:id].to_i*11].user.last_name%>  <a href="/gossips/<%=nb+ params[:id].to_i*11%>"> Voir plus</a></p>
+    </div>
+</div>
+
+    <%i=1%>
+    <%end%>
+    <%end%>
+
+    <div class="row justify-content-center p-0 m-0">
+    <div class="col-6 p-3 mt-4 d-flex justify-content-between bg-light text-grey center-block border">
+      <a href="/<%= params[:id].to_i - 1%>">Previous</a>
+      <a href="/<%= params[:id].to_i + 1%>">Next</a>
+    </div>
+    </div>
+  </body>
+</html>
